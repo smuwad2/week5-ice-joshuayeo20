@@ -24,7 +24,61 @@
         </div>
         <script>
             function getData() {
- 
+                let limit = document.getElementById("limit").value;
+                let type = document.getElementById("type").value;
+                let result = document.getElementById("result");
+                while(result.lastChild){
+                    result.lastChild.remove();
+                }
+                let h2Elem = document.createElement("h2");
+                let tableElem = document.createElement("table");
+                tableElem.className = "table";
+                let thead = document.createElement("thead");
+                let tbody = document.createElement("tbody");
+                h2Elem.innerText = type;
+                result.appendChild(h2Elem);
+                url = "/data";
+                axios.get(url, 
+                    {
+                        params: {
+                            limit: limit,
+                            type, type
+                        }
+                    })
+                    .then(response =>{
+                        let mainData = response.data.records;
+                        console.log(mainData);
+                        let Headers = Object.keys(mainData[0]);
+                        console.log(Headers);
+                        let TotalHeaders = Headers.length;
+                        let trHeadRow = document.createElement("tr");
+                        for(Header of Headers){
+                            let thElem = document.createElement("th");
+                            thElem.innerText = Header;
+                            trHeadRow.appendChild(thElem);
+                            console.log(trHeadRow);
+                        }
+                        thead.appendChild(trHeadRow);
+                        tableElem.appendChild(thead);
+                        for(let j=0; j<limit; j++){
+                            let values = Object.values(mainData[j]);
+                            let trBody = document.createElement("tr");
+                            for(value of values){
+                                let tdElem = document.createElement("td");
+                                tdElem.innerText = value;
+                                trBody.appendChild(tdElem);
+                            }
+                            tbody.appendChild(trBody);
+                        }
+                        tableElem.appendChild(tbody);
+                        result.appendChild(tableElem);
+
+                        
+                    })
+                    .catch(error=>{
+                        console.log(error);
+                    })
+
             }
 
         </script>
